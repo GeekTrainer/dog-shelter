@@ -1,0 +1,72 @@
+# filepath: server/app.py
+import os
+from flask import Flask, jsonify
+from models import init_db, db, Dog, Breed
+from flask_cors import CORS
+
+# Get the server directory path
+base_dir = os.path.abspath(os.path.dirname(__file__))
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(base_dir, "dogshelter.db")}'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Enable CORS for all routes with specific origin
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+# Initialize the database with the app
+init_db(app)
+
+@app.route('/api/dogs', methods=['GET'])
+def get_dogs():
+    # Query all dogs and join with breeds to get the breed name
+    dogs_query = db.session.query(
+        Dog.id, 
+        Dog.name, 
+        Breed.name.label('breed')
+    ).join(Breed, Dog.breed_id == Breed.id).all()
+    
+    # Convert the result to a list of dictionaries
+    dogs_list = [
+        {
+            'id': dog.id,
+            'name': dog.name,
+            'breed': dog.breed
+        }
+        for dog in dogs_query
+    ]
+    
+    return jsonify(dogs_list)
+
+@app.route('/api/dogs/<int:id>', methods=['GET'])
+def get_dog(id):
+    # Query the specific dog by ID and join with breed to get breed name
+    dog_query = db.session.query(
+        Dog.id,
+        Dog.name,
+        Breed.name.label('breed'),
+        Dog.age,
+        Dog.description,
+        Dog.gender,
+        Dog.status
+    ).join(Breed, Dog.breed_id == Breed.id).filter(Dog.id == id).first()
+    
+    # Return 404 if dog not found
+    if not dog_query:
+        return jsonify({"error": "Dog not found"}), 404
+    
+    # Convert the result to a dictionary
+    dog = {
+        'id': dog_query.id,
+        'name': dog_query.name,
+        'breed': dog_query.breed,
+        'age': dog_query.age,
+        'description': dog_query.description,
+        'gender': dog_query.gender,
+        'status': dog_query.status.name
+    }
+    
+    return jsonify(dog)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5100) # Port 5100 to avoid macOS conflicts
