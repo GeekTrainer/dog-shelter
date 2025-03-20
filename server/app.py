@@ -17,6 +17,8 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 # Initialize the database with the app
 init_db(app)
 
+print('hello')
+
 @app.route('/api/dogs', methods=['GET'])
 def get_dogs():
     # Query all dogs and join with breeds to get the breed name
