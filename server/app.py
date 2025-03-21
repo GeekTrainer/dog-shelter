@@ -1,6 +1,6 @@
 # filepath: server/app.py
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from models import init_db, db, Dog, Breed
 from flask_cors import CORS
 
@@ -19,12 +19,23 @@ init_db(app)
 
 @app.route('/api/dogs', methods=['GET'])
 def get_dogs():
-    # Query all dogs and join with breeds to get the breed name
-    dogs_query = db.session.query(
+    # Start with base query
+    query = db.session.query(
         Dog.id, 
         Dog.name, 
         Breed.name.label('breed')
-    ).join(Breed, Dog.breed_id == Breed.id).all()
+    ).join(Breed, Dog.breed_id == Breed.id)
+    
+    # Apply filters based on query parameters
+    breed = request.args.get('breed')
+    if breed:
+        query = query.filter(Breed.name == breed)
+        
+    status = request.args.get('status')
+    if status == 'available':
+        query = query.filter(Dog.status == 'AVAILABLE')
+    
+    dogs_query = query.all()
     
     # Convert the result to a list of dictionaries
     dogs_list = [
@@ -67,6 +78,23 @@ def get_dog(id):
     }
     
     return jsonify(dog)
+
+# Route to get all breeds
+@app.route('/api/breeds', methods=['GET'])
+def get_breeds():
+    # Query all breeds
+    breeds_query = db.session.query(Breed.id, Breed.name).all()
+    
+    # Convert the result to a list of dictionaries
+    breeds_list = [
+        {
+            'id': breed.id,
+            'name': breed.name
+        }
+        for breed in breeds_query
+    ]
+    
+    return jsonify(breeds_list)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5100) # Port 5100 to avoid macOS conflicts
