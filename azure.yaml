@@ -7,7 +7,9 @@ services:
     client:
         project: client
         host: containerapp
-        language: ts
+        language: js
+        docker:
+            path: Dockerfile
     server:
         project: server
         host: containerapp
