@@ -22,7 +22,7 @@
     async function fetchDogs() {
         loading = true;
         try {
-            let url = 'http://localhost:5100/api/dogs?';
+            let url = '/api/dogs?';
             if (selectedBreed) url += `breed=${encodeURIComponent(selectedBreed)}&`;
             if (onlyAvailable) url += 'status=available&';
             
@@ -41,7 +41,7 @@
 
     async function fetchBreeds() {
         try {
-            const response = await fetch('http://localhost:5100/api/breeds');
+            const response = await fetch('/api/breeds');
             if(response.ok) {
                 breeds = await response.json();
             }
