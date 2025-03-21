@@ -127,6 +127,10 @@ module client 'br/public:avm/res/app/container-app:0.8.0' = {
             name: 'PORT'
             value: '4321'
           }
+          {
+            name: 'API_SERVER_URL'
+            value: 'https://${server.outputs.fqdn}'
+          }
         ],
         clientEnv,
         map(clientSecrets, secret => {
