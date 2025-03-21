@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import svelte from '@astrojs/svelte';
 
 import node from '@astrojs/node';
+const API_SERVER_URL = process.env.API_SERVER_URL || 'http://localhost:5100';
 
 // https://astro.build/config
 export default defineConfig({
@@ -12,7 +13,7 @@ export default defineConfig({
     server: {
       proxy: {
         '/api': {
-          target: 'http://localhost:5100',
+          target: API_SERVER_URL,
           changeOrigin: true,
         }
       }
