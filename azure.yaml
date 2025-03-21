@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: dog-shelter
+metadata:
+    template: azd-init@1.13.1
+services:
+    client:
+        project: client
+        host: containerapp
+        language: ts
+    server:
+        project: server
+        host: containerapp
+        language: python
