@@ -1,7 +1,7 @@
 import { defineMiddleware } from "astro:middleware";
 
 // Get server URL from environment variable with fallback for local development
-const SERVER_URL = process.env.SERVER_URL || 'http://localhost:5100';
+const API_SERVER_URL = process.env.API_SERVER_URL || 'http://localhost:5100';
 
 // Middleware to handle API requests
 export const onRequest = defineMiddleware(async (context, next) => {
@@ -13,13 +13,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
   
   // API request handling
-  console.log('Forwarding request to server:', SERVER_URL);
+  console.log('Forwarding request to server:', API_SERVER_URL);
   
   const url = new URL(context.request.url);
   const apiPath = url.pathname + url.search;
   
   // Create a new request to the backend server
-  const serverRequest = new Request(`${SERVER_URL}${apiPath}`, {
+  const serverRequest = new Request(`${API_SERVER_URL}${apiPath}`, {
     method: context.request.method,
     headers: context.request.headers,
     body: context.request.method !== 'GET' && context.request.method !== 'HEAD' ? 
