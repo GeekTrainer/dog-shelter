@@ -27,3 +27,4 @@ Server notes
 
 - Use type hints
 - Always need unit tests for the API
+- When running tests, make sure to activate the virtual environment in venv (located in the root of the project)
