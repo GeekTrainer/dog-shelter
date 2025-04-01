@@ -18,7 +18,8 @@ def get_dogs() -> Response:
     query = db.session.query(
         Dog.id, 
         Dog.name, 
-        Breed.name.label('breed')
+        Breed.name.label('breed'),
+        Dog.status
     ).join(Breed, Dog.breed_id == Breed.id)
     
     dogs_query = query.all()
@@ -28,7 +29,8 @@ def get_dogs() -> Response:
         {
             'id': dog.id,
             'name': dog.name,
-            'breed': dog.breed
+            'breed': dog.breed,
+            'status': dog.status.name
         }
         for dog in dogs_query
     ]
@@ -64,8 +66,6 @@ def get_dog(id: int) -> tuple[Response, int] | Response:
     }
     
     return jsonify(dog)
-
-## HERE
 
 if __name__ == '__main__':
     app.run(debug=True, port=5100) # Port 5100 to avoid macOS conflicts
