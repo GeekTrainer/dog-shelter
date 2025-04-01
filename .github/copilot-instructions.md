@@ -28,3 +28,4 @@ Server testing notes
 - Tests are required for the API
 - All database calls should be mocked in tests
 - When running tests, make sure to activate the virtual environment in venv (located in the root of the project)
+- Use absolute paths when running scripts and commands
