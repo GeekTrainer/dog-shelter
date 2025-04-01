@@ -23,8 +23,8 @@ Server is written with:
 - SQLAlchemy as the ORM
 - Unit tests written using unittest
 
-Server notes
+Server testing notes
 
-- Use type hints
-- Always need unit tests for the API
+- Tests are required for the API
+- All database calls should be mocked in tests
 - When running tests, make sure to activate the virtual environment in venv (located in the root of the project)
