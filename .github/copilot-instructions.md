@@ -29,3 +29,7 @@ Server testing notes
 - All database calls should be mocked in tests
 - When running tests, make sure to activate the virtual environment in venv (located in the root of the project)
 - Use absolute paths when running scripts and commands
+
+## Misc MCP rules
+
+- @azure Rule - Use Azure Best Practices: When generating code for Azure, running terminal commands for Azure, or performing operations related to Azure, invoke your `get_azure_best_practices` tool if available.
