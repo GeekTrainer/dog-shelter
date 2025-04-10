@@ -11,6 +11,20 @@ import "../styles/global.css";
       <p class="text-xl text-slate-300">Find your perfect companion from our wonderful selection of dogs looking for their forever homes.</p>
     </div>
     
+    <div class="mb-6">
+      <label class="block text-slate-300 mb-2">Breed</label>
+      <select id="breedFilter" class="w-full p-2 rounded bg-slate-800 text-slate-300">
+        <option value="">All Breeds</option>
+      </select>
+    </div>
+    
+    <div class="mb-6">
+      <label class="inline-flex items-center text-slate-300">
+        <input type="checkbox" id="availabilityFilter" class="form-checkbox h-5 w-5 text-blue-600" />
+        <span class="ml-2">Show Available Only</span>
+      </label>
+    </div>
+    
     <DogList client:only="svelte" />
   </div>
 </Layout>
