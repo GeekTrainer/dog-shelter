@@ -5,11 +5,15 @@
         id: number;
         name: string;
         breed: string;
+        status: 'AVAILABLE' | 'PENDING' | 'ADOPTED';
     }
 
     export let dogs: Dog[] = [];
     let loading = true;
     let error: string | null = null;
+    let breeds: string[] = [];
+    let selectedBreed: string = '';
+    let showAvailableOnly: boolean = false;
 
     const fetchDogs = async () => {
         loading = true;
@@ -27,13 +31,59 @@
         }
     };
 
+    const fetchBreeds = async () => {
+        try {
+            const response = await fetch('/api/breeds');
+            if(response.ok) {
+                breeds = await response.json();
+            } else {
+                error = `Failed to fetch breeds: ${response.status} ${response.statusText}`;
+            }
+        } catch (err) {
+            error = `Error: ${err instanceof Error ? err.message : String(err)}`;
+        }
+    };
+
+    const applyFilters = () => {
+        fetchDogs();
+    };
+
+    const clearFilters = () => {
+        selectedBreed = '';
+        showAvailableOnly = false;
+        fetchDogs();
+    };
+
     onMount(() => {
         fetchDogs();
+        fetchBreeds();
     });
 </script>
 
 <div>
     <h2 class="text-2xl font-medium mb-6 text-slate-100">Available Dogs</h2>
+    
+    <div class="mb-6">
+        <label class="block text-slate-300 mb-2">Breed</label>
+        <select bind:value={selectedBreed} class="w-full p-2 rounded bg-slate-800 text-slate-300">
+            <option value="">All Breeds</option>
+            {#each breeds as breed}
+                <option value={breed}>{breed}</option>
+            {/each}
+        </select>
+    </div>
+    
+    <div class="mb-6">
+        <label class="inline-flex items-center text-slate-300">
+            <input type="checkbox" bind:checked={showAvailableOnly} class="form-checkbox h-5 w-5 text-blue-600" />
+            <span class="ml-2">Show Available Only</span>
+        </label>
+    </div>
+    
+    <div class="mb-6">
+        <button on:click={applyFilters} class="px-4 py-2 bg-blue-600 text-white rounded">Apply Filters</button>
+        <button on:click={clearFilters} class="ml-4 px-4 py-2 bg-gray-600 text-white rounded">Clear Filters</button>
+    </div>
     
     {#if loading}
         <!-- loading animation -->
